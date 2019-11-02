@@ -1,11 +1,11 @@
 {
   "development": {
-    "database": "starterkit_development",
+    "database": "united_women_dev",
     "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
-    "database": "starterkit_test",
+    "database": "united_women_test",
     "host": "localhost",
     "dialect": "postgres"
   },
