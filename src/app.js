@@ -48,6 +48,6 @@ app.post(
     res.clearCookie("connect.sid");
     res.redirect("/");
   }
-)
+);
 
 module.exports = app;

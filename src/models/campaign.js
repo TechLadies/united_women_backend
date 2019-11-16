@@ -1,7 +1,7 @@
 'use strict'
 module.exports = (sequelize, DataTypes) => {
-  const campaign = sequelize.define(
-    'campaign',
+  const Campaign = sequelize.define(
+    'Campaign',
     {
       type: DataTypes.STRING,
       dateStart: DataTypes.DATE,
@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   )
-  campaign.associate = function (models) {
+  Campaign.associate = function (models) {
     // associations can be defined here
   }
-  return campaign
+  return Campaign
 }

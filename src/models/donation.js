@@ -1,7 +1,7 @@
 'use strict'
 module.exports = (sequelize, DataTypes) => {
-  const donation = sequelize.define(
-    'donation',
+  const Donation = sequelize.define(
+    'Donation',
     {
       amount: DataTypes.INTEGER,
       campaignId: DataTypes.INTEGER,
@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   )
-  donation.associate = function (models) {
+  Donation.associate = function (models) {
     // associations can be defined here
   }
-  return donation
+  return Donation
 }

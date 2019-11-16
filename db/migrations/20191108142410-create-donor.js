@@ -40,6 +40,13 @@ module.exports = {
       donationStart: {
         type: Sequelize.DATE
       },
+      preferredContactMode: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "ContactModes",
+          key: "id"
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

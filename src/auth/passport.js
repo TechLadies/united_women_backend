@@ -5,13 +5,7 @@ const { User } = require("../models");
 
 passport.use(
   new LocalStrategy(async (username, password, done) => {
-    let user = await User.findOne({ where: { username: username } }).catch(
-      err => {
-        //error handling
-        console.error(err);
-        return done(err);
-      }
-    );
+    let user = await User.findOne({ where: { username: username } });
 
     //if user doesnt exist
     if (!user) {
@@ -19,20 +13,6 @@ passport.use(
     }
 
     //authentication
-    /* bcrypt.compare(password, user.passwordHash, (err, isValid) => {
-      //error handling
-      if (err) {
-        console.error(err);
-        return done(err);
-      }
-
-      //if password is invalid
-      if (!isValid) {
-        return done(null, false, { message: "Incorrect password." });
-      } else {
-        return done(null, user);
-      }
-    }); */
     user.validatePassword(password, user, done);
   })
 );
@@ -41,10 +21,13 @@ passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
+passport.deserializeUser(async function(id, done) {
+  const user = await User.findByPk(id);
+  if (user) {
+    return done(null, user);
+  } else {
+    return done({ error: "User not found." }, null);
+  }
 });
 
 module.exports = passport;
