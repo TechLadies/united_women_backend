@@ -9,7 +9,9 @@
     "jsfmt": "eslint \"src/**/*.js\" --fix",
     "jslint": "eslint \"src/**/*.js\"",
     "db:create": "./node_modules/.bin/sequelize db:create",
+    "db:drop": "./node_modules/.bin/sequelize db:drop",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
+    "db:reset": "npm run db:drop && npm run db:create && npm run db:migrate",
     "db:seed": "./node_modules/.bin/sequelize db:seed:all"
   },
   "repository": {

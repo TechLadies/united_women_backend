@@ -42,6 +42,7 @@ jobs:
           name: Database Setup
           command: |
             npm run db:migrate
+            npm run db:seed
 
       # run tests!
       - run: npm test
