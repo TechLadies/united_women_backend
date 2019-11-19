@@ -34,6 +34,13 @@ module.exports = {
           key: "id"
         }
       },
+      donorFrequencyId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "DonorFrequencies",
+          key: "id"
+        }
+      },
       address: {
         type: Sequelize.STRING
       },
@@ -46,6 +53,9 @@ module.exports = {
           model: "ContactModes",
           key: "id"
         }
+      },
+      doNotContact: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
