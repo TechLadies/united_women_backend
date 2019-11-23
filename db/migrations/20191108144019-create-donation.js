@@ -9,24 +9,28 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       amount: {
-        type: Sequelize.DECIMAL(19, 4)
+        type: Sequelize.DECIMAL(19, 4),
+        allowNull: false
       },
       campaignId: {
         type: Sequelize.INTEGER,
         references: {
           model: "Campaigns",
           key: "id"
-        }
+        },
+        allowNull: false
       },
       sourceId: {
         type: Sequelize.INTEGER,
         references: {
           model: "Sources",
           key: "id"
-        }
+        },
+        allowNull: false
       },
       donationDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       donorId: {
         type: Sequelize.INTEGER,
