@@ -8,6 +8,7 @@ const cors = require("cors");
 const passport = require("../src/auth/passport");
 const auth = require(path.resolve('src/auth/auth'));
 const app = express();
+const donorsRouter = require('./routes/donors')
 
 app.use(cors());
 app.use(logger("dev"));
@@ -28,6 +29,8 @@ app.get('/test-optional', auth.optional, function(req, res){
   const user = req.user || {};
   res.json({ id: user.id, username: user.username });
 });
+
+app.use('/donors', donorsRouter)
 
 app.get('*', function (_, res) {
   res.status(404).json({ message: '404 not found' });
