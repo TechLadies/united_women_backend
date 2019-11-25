@@ -7,15 +7,15 @@ module.exports = {
       [
         {
           type: "STEM",
-          dateStart: new Date(2019, 01, 11),
-          dateEnd: new Date(2019, 02, 11),
+          dateStart: new Date(2018, 1, 23),
+          dateEnd: new Date(2019, 6, 10),
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           type: "Anti-Violence",
-          dateStart: new Date(2019, 02, 11),
-          dateEnd: new Date(2019, 03, 11),
+          dateStart: new Date(2018, 3, 24),
+          dateEnd: new Date(2019, 9, 20),
           createdAt: new Date(),
           updatedAt: new Date()
         }
