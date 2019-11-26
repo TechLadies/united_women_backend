@@ -9,24 +9,28 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       filename: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       sourceId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Sources',
           key: 'id'
-        }
+        },
+        allowNull: false
       },
       dateUploaded: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       uploadedBy: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
           key: 'id'
-        }
+        },
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

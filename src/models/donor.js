@@ -7,8 +7,11 @@ module.exports = (sequelize, DataTypes) => {
     contactNo: DataTypes.STRING,
     email: DataTypes.STRING,
     donorTypeId: DataTypes.INTEGER,
+    donorFrequencyId: DataTypes.INTEGER,
     address: DataTypes.STRING,
-    donationStart: DataTypes.DATE
+    donationStart: DataTypes.DATE,
+    preferredContactMode: DataTypes.STRING,
+    doNotContact: DataTypes.BOOLEAN
   }, {});
   Donor.associate = function(models) {
     // associations can be defined here

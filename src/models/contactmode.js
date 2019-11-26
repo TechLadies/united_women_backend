@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const ContactMode = sequelize.define(
     'ContactMode',
     {
-      ContactMode: DataTypes.STRING
+      contactMode: DataTypes.STRING
     },
     {}
   )

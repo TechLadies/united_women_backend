@@ -9,10 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       identifier: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       salutationId: {
         type: Sequelize.INTEGER,
@@ -32,20 +34,35 @@ module.exports = {
         references: {
           model: "DonorTypes",
           key: "id"
-        }
+        },
+        allowNull: false
+      },
+      donorFrequencyId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "DonorFrequencies",
+          key: "id"
+        },
+        allowNull: false
       },
       address: {
         type: Sequelize.STRING
       },
       donationStart: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       preferredContactMode: {
         type: Sequelize.INTEGER,
         references: {
           model: "ContactModes",
           key: "id"
-        }
+        },
+        allowNull: false
+      },
+      doNotContact: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

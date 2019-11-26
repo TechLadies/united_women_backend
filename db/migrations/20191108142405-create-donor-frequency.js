@@ -1,14 +1,14 @@
-'use strict'
+'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Sources', {
+    return queryInterface.createTable('DonorFrequencies', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      donorFrequency: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -20,9 +20,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    })
+    });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Sources')
+    return queryInterface.dropTable('DonorFrequencies');
   }
-}
+};
