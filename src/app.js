@@ -9,6 +9,7 @@ const passport = require("../src/auth/passport");
 const auth = require(path.resolve('src/auth/auth'));
 const app = express();
 const donorsRouter = require('./routes/donors')
+const donationsRouter = require('./routes/donations')
 
 app.use(cors());
 app.use(logger("dev"));
@@ -31,9 +32,12 @@ app.get('/test-optional', auth.optional, function(req, res){
 });
 
 app.use('/donors', donorsRouter)
+app.use('/donations', donationsRouter)
+
 
 app.get('*', function (_, res) {
   res.status(404).json({ message: '404 not found' });
 });
+
 
 module.exports = app;
