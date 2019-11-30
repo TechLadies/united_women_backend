@@ -4,6 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     identifier: DataTypes.STRING,
     salutationId: DataTypes.INTEGER,
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
     contactNo: DataTypes.STRING,
     email: DataTypes.STRING,
     donorTypeId: DataTypes.INTEGER,
@@ -11,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     donationStart: DataTypes.DATE,
     preferredContactMode: DataTypes.STRING,
-    doNotContact: DataTypes.BOOLEAN
+    doNotContact: DataTypes.BOOLEAN,
+    remarks: DataTypes.STRING,
   }, {});
   Donor.associate = function(models) {
     // associations can be defined here
