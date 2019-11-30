@@ -30,7 +30,7 @@ async function fetchDonations(query, offset=null, limit=null) {
   if (source) {
     include.push({
       model: db.Source,
-      where: { name: { [Op.in]: source.split(",") } }
+      where: { name: { [Op.in]: source.split(",") } },
     });
   }
 
@@ -103,16 +103,20 @@ router.get("/download", async function(req, res, next) {
   res.setHeader("Pragma", "no-cache");
 
   try {
-    const donations = await fetchDonations(req.query); 
-    const donationsJSON = donations.map( x=>{
+    const donations = await fetchDonations(req.query)
+    const promises = donations.map(async x=>{
       let donation = x.toJSON();
       delete donation.createdAt;
       delete donation.updatedAt;
-      //const sourceobj = await x.getSource();
-      //donation.source = sourceobj.name;
+      delete donation.campaignId;
+      delete donation.sourceId;
+      donation.campaign = (await x.getCampaign()).type;
+      donation.source = (await x.getSource()).name;
+      donation.donorName = (await x.getDonor()).name;
       donation.donationDate = donation.donationDate.toDateString();
       return donation;
     })
+    const donationsJSON = await Promise.all(promises);
     stringify(donationsJSON, { header: true }).pipe(res);
   } catch (err) {
     console.log(err);
