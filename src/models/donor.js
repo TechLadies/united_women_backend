@@ -15,6 +15,22 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Donor.associate = function(models) {
     // associations can be defined here
+    Donor.hasOne(models.Salutation, {
+      sourceKey: 'salutationId',
+      foreignKey: 'id',
+      as: 'salutation'
+    })
+    Donor.hasOne(models.DonorFrequency, {
+      sourceKey: 'donorFrequencyId',
+      foreignKey: 'id',
+      as: 'donorFrequency'
+    })
+    Donor.hasOne(models.DonorType, {
+      sourceKey: 'donorTypeId',
+      foreignKey: 'id',
+      as: 'donorType'
+    })
+
   };
   return Donor;
 };
