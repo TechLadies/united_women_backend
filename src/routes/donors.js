@@ -64,7 +64,9 @@ router.get('/:id/donations', pagination, async function (req, res, next) {
 
   try {
     const donations = await db.Donation.findAll({
-      where: { donorId: req.params.id },
+      where: {
+        donorId: req.params.id
+      },
       limit: limit,
       offset: offset
     })
