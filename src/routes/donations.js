@@ -43,7 +43,8 @@ router.get("", pagination, async function(req, res, next) {
       include: [
         {
           model: db.DonorType,
-          where: { donorType: { [Op.in]: donorType.split(",") } }
+          where: { donorType: { [Op.in]: donorType.split(",") } },
+          as: 'donorType'
         }
       ]
     });

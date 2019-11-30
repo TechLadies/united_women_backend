@@ -14,12 +14,23 @@ module.exports = (sequelize, DataTypes) => {
     doNotContact: DataTypes.BOOLEAN
   }, {});
   Donor.associate = function(models) {
-    Donor.belongsTo(models.DonorType, {
-      foreignKey: 'donorTypeId'
+    // associations can be defined here
+    Donor.hasOne(models.Salutation, {
+      sourceKey: 'salutationId',
+      foreignKey: 'id',
+      as: 'salutation'
     })
-    // Donor.hasMany(models.Donation, {
-    //   foreignKey: 'donorId'
-    // })
+    Donor.hasOne(models.DonorFrequency, {
+      sourceKey: 'donorFrequencyId',
+      foreignKey: 'id',
+      as: 'donorFrequency'
+    })
+    Donor.hasOne(models.DonorType, {
+      sourceKey: 'donorTypeId',
+      foreignKey: 'id',
+      as: 'donorType'
+    })
+
   };
   return Donor;
 };
