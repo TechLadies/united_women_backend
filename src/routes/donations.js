@@ -25,6 +25,10 @@ async function fetchDonations(query, offset=null, limit=null) {
       model: db.Campaign,
       where: { type: { [Op.in]: campaign.split(",") } }
     });
+  } else {
+    include.push({
+      model: db.Campaign
+    });
   }
 
   if (source) {
@@ -32,6 +36,10 @@ async function fetchDonations(query, offset=null, limit=null) {
       model: db.Source,
       where: { name: { [Op.in]: source.split(",") } },
     });
+  } else {
+    include.push({
+      model: db.Source
+    })
   }
 
   if (donorType) {
@@ -45,6 +53,10 @@ async function fetchDonations(query, offset=null, limit=null) {
           as: 'donorType'
         }
       ]
+    });
+  } else {
+    include.push({
+      model: db.Donor
     });
   }
 
@@ -104,17 +116,19 @@ router.get("/download", async function(req, res, next) {
 
   try {
     const donations = await fetchDonations(req.query)
-    const promises = donations.map(async x=>{
+    const promises = donations.map(x=>{
       let donation = x.toJSON();
-      delete donation.createdAt;
-      delete donation.updatedAt;
-      delete donation.campaignId;
-      delete donation.sourceId;
-      donation.campaign = (await x.getCampaign()).type;
-      donation.source = (await x.getSource()).name;
-      donation.donorName = (await x.getDonor()).name;
-      donation.donationDate = donation.donationDate.toDateString();
-      return donation;
+
+      const { id, amount } = donation
+
+      return {
+        id,
+        donationDate: donation.donationDate.toDateString(),
+        campaign: donation.Campaign.type,
+        source: donation.Source.name,
+        donorName: donation.Donor.name,
+        amount
+      }
     })
     const donationsJSON = await Promise.all(promises);
     stringify(donationsJSON, { header: true }).pipe(res);
