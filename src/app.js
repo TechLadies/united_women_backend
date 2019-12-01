@@ -32,7 +32,7 @@ app.get('/test-optional', auth.optional, function(req, res){
 });
 
 app.use('/donors', donorsRouter)
-app.use('/donations', donationsRouter)
+app.use('/donations', auth.required, donationsRouter)
 
 app.get('*', function (_, res) {
   res.status(404).json({ message: '404 not found' });
