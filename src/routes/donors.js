@@ -5,7 +5,7 @@ const db = require("../models/index");
 const pagination = require("../middlewares/pagination");
 /* GET donor info */
 
-router.get("", pagination, async function(req, res, next) {
+router.get("", pagination, async function (req, res, next) {
   let offset = req.customParams.offset;
   let limit = req.customParams.limit;
 
@@ -26,7 +26,7 @@ router.get("", pagination, async function(req, res, next) {
   }
 });
 
-router.get("/:id", async function(req, res, next) {
+router.get("/:id", async function (req, res, next) {
   try {
     const donor = await db.Donor.findOne({
       where: {
@@ -65,7 +65,7 @@ router.get("/:id", async function(req, res, next) {
    Sample: /donors/1/donations?page=3&perPage=12
 */
 
-router.get("/:id/donations", pagination, async function(req, res, next) {
+router.get("/:id/donations", pagination, async function (req, res, next) {
   let offset = req.customParams.offset;
   let limit = req.customParams.limit;
 
@@ -90,7 +90,7 @@ router.get("/:id/donations", pagination, async function(req, res, next) {
   }
 });
 
-router.patch("/:id", async function(req, res, next) {
+router.patch("/:id", async function (req, res, next) {
   const donor = await db.Donor.findOne({ where: { id: req.params.id } });
   console.log(req.body);
   // Check if record exists in db
