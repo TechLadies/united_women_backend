@@ -10,6 +10,7 @@ const auth = require(path.resolve('src/auth/auth'));
 const app = express();
 const donorsRouter = require('./routes/donors')
 const donationsRouter = require('./routes/donations')
+const filtersRouter = require('./routes/filters')
 
 app.use(cors());
 app.use(logger("dev"));
@@ -33,6 +34,7 @@ app.get('/test-optional', auth.optional, function(req, res){
 
 app.use('/donors', donorsRouter)
 app.use('/donations', auth.required, donationsRouter)
+app.use('/filters', auth.required, filtersRouter)
 
 app.get('*', function (_, res) {
   res.status(404).json({ message: '404 not found' });
