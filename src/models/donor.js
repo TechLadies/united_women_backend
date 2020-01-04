@@ -30,7 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id',
       as: 'donorType'
     })
-
+    Donor.hasMany(models.Donation, {
+      as: 'Donation',
+      foreignKey: 'donorId',
+      sourceKey: 'id'
+    })
   };
   return Donor;
 };
