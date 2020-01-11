@@ -113,25 +113,18 @@ router.patch("/:id", async function (req, res, next) {
 
 router.patch("/:id", async function(req, res, next) {
   const donor = await db.Donor.findOne({ where: { id: req.params.id } });
-
+  console.log(req.body);
   // Check if record exists in db
   if (donor) {
     try {
-      await donor.update(
-        { name: req.body.name },
-        { identifier: req.body.identifier },
-        { contactNo: req.body.contactNo },
-        { salutationId: req.body.salutationId },
-        { email: req.body.email },
-        { donorTypeId: req.body.donorTypeId },
-        { donorFrequencyId: req.body.donorFrequencyId },
-        { address: req.body.address },
-        { preferredContactMode: req.body.preferredContactMode },
-        { doNotContact: req.body.doNotContact }
-      );
+      for (let key in req.body) {
+        donor[key] = req.body[key];
+      }
+      await donor.save();
+      console.log("updated", donor);
       return res.sendStatus(204);
     } catch (err) {
-      console.err(err);
+      console.error(err);
       res.sendStatus(500);
     }
   } else {
