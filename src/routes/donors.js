@@ -88,4 +88,32 @@ router.get("/:id/donations", pagination, async function(req, res, next) {
   }
 });
 
+router.patch("/:id", async function(req, res, next) {
+  const donor = await db.Donor.findOne({ where: { id: req.params.id } });
+
+  // Check if record exists in db
+  if (donor) {
+    try {
+      await donor.update(
+        { name: req.body.name },
+        { identifier: req.body.identifier },
+        { contactNo: req.body.contactNo },
+        { salutationId: req.body.salutationId },
+        { email: req.body.email },
+        { donorTypeId: req.body.donorTypeId },
+        { donorFrequencyId: req.body.donorFrequencyId },
+        { address: req.body.address },
+        { preferredContactMode: req.body.preferredContactMode },
+        { doNotContact: req.body.doNotContact }
+      );
+      return res.sendStatus(204);
+    } catch (err) {
+      console.err(err);
+      res.sendStatus(500);
+    }
+  } else {
+    res.status(400).json({ error: "Donor not found" });
+  }
+});
+
 module.exports = router;
