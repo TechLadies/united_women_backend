@@ -46,6 +46,11 @@ router.get("/:id", async function(req, res, next) {
           model: db.DonorType,
           attributes: ["id", "donorType"],
           as: "donorType"
+        },
+        {
+          model: db.ContactMode,
+          attributes: ["id", "contactMode"],
+          as: "contactMode"
         }
       ]
     });
