@@ -1,16 +1,18 @@
 require("dotenv").config();
 
 const express = require("express");
-const path = require('path');
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 const passport = require("../src/auth/passport");
-const auth = require(path.resolve('src/auth/auth'));
+const auth = require(path.resolve("src/auth/auth"));
 const app = express();
-const donorsRouter = require('./routes/donors')
-const donationsRouter = require('./routes/donations')
-const filtersRouter = require('./routes/filters')
+const donorsRouter = require("./routes/donors");
+const donationsRouter = require("./routes/donations");
+const filtersRouter = require("./routes/filters");
+//const uploadRouter = require("./routes/upload-csv");
+const conflictsRouter = require("./routes/conflicts");
 
 app.use(cors());
 app.use(logger("dev"));
@@ -20,25 +22,26 @@ app.use(cookieParser());
 
 app.use(passport.initialize());
 
-app.post('/login', auth.login);
+app.post("/login", auth.login);
 
-app.get('/test-required', auth.required, function(req, res){
+app.get("/test-required", auth.required, function(req, res) {
   const user = req.user || {};
   res.json({ id: user.id, username: user.username });
 });
 
-app.get('/test-optional', auth.optional, function(req, res){
+app.get("/test-optional", auth.optional, function(req, res) {
   const user = req.user || {};
   res.json({ id: user.id, username: user.username });
 });
 
-app.use('/donors', donorsRouter)
-app.use('/donations', auth.required, donationsRouter)
-app.use('/filters', auth.required, filtersRouter)
+app.use("/donors", donorsRouter);
+app.use("/donations", auth.required, donationsRouter);
+app.use("/filters", auth.required, filtersRouter);
+//app.use("/upload-csv", uploadRouter);
+app.use("/conflicts", conflictsRouter);
 
-app.get('*', function (_, res) {
-  res.status(404).json({ message: '404 not found' });
+app.get("*", function(_, res) {
+  res.status(404).json({ message: "404 not found" });
 });
-
 
 module.exports = app;
