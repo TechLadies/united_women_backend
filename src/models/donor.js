@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       address: DataTypes.STRING,
       donationStart: DataTypes.DATE,
       preferredContactMode: DataTypes.STRING,
-      doNotContact: DataTypes.BOOLEAN
+      doNotContact: DataTypes.BOOLEAN,
+      comments: DataTypes.STRING
     },
     {}
   );
