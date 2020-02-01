@@ -3,17 +3,75 @@ const router = express.Router();
 const debug = require("debug")("app:users");
 const db = require("../models/index");
 const pagination = require("../middlewares/pagination");
-/* GET donor info */
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
+/* GET donor info with filters
+   Sample: /donors?donorTypeId=1&dateStart=2019-11-01T16:00:00.000Z
+ */
 
-router.get("", pagination, async function(req, res, next) {
+router.get("", pagination, async function (req, res, next) {
   let offset = req.customParams.offset;
   let limit = req.customParams.limit;
 
+  const {
+    dateStart,
+    dateEnd,
+    donorTypeId,
+    donorFrequencyId
+  } = req.query;
+
+  let include = [];
+  let where = {};
+
+  if (donorTypeId) {
+    where.donorTypeId = donorTypeId;
+  }
+
+  if (donorFrequencyId) {
+    where.donorFrequencyId = donorFrequencyId;
+  }
+
+  if (dateStart) {
+    where.donationStart = where.donationStart || {}
+    where.donationStart[Op.gt] = new Date(dateStart);
+  }
+
+  if (dateEnd) {
+    where.donationStart = where.donationStart || {}
+    where.donationStart[Op.lt] = new Date(dateEnd);
+  }
+
+  include.push({
+    model: db.Donation,
+    as: 'donations'
+  });
+
   try {
     const donors = await db.Donor.findAll({
+      include: [
+        {
+
+          model: db.Donation,
+          attributes: ['amount']
+        }
+      ],
+      where: where,
       limit: limit,
       offset: offset,
-      order: [["id", "ASC"]]
+      order: [["donationStart", "DESC"]],
+      includeIgnoreAttributes: false,
+      attributes: [
+        'id',
+        'name',
+        'email',
+        'identifier',
+        'donationStart',
+        'donorTypeId',
+        'donorFrequencyId',
+        [Sequelize.fn('SUM', Sequelize.col('"Donations".amount')), 'total_amount']
+      ],
+      subQuery: false,
+      group: ["Donor.id"]
     });
     res.json({
       data: donors,
@@ -26,7 +84,7 @@ router.get("", pagination, async function(req, res, next) {
   }
 });
 
-router.get("/:id", async function(req, res, next) {
+router.get("/:id", async function (req, res, next) {
   try {
     const donor = await db.Donor.findOne({
       where: {
@@ -65,7 +123,7 @@ router.get("/:id", async function(req, res, next) {
    Sample: /donors/1/donations?page=3&perPage=12
 */
 
-router.get("/:id/donations", pagination, async function(req, res, next) {
+router.get("/:id/donations", pagination, async function (req, res, next) {
   let offset = req.customParams.offset;
   let limit = req.customParams.limit;
 
@@ -90,7 +148,7 @@ router.get("/:id/donations", pagination, async function(req, res, next) {
   }
 });
 
-router.patch("/:id", async function(req, res, next) {
+router.patch("/:id", async function (req, res, next) {
   const donor = await db.Donor.findOne({ where: { id: req.params.id } });
   console.log(req.body);
   // Check if record exists in db
