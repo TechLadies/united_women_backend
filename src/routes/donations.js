@@ -8,7 +8,7 @@ const stringify = require("csv-stringify");
 
 /* GET Donation Records */
 
-async function fetchDonations(query, offset=null, limit=null) {
+async function fetchDonations(query, offset = null, limit = null) {
   const {
     dateStart,
     dateEnd,
@@ -86,12 +86,12 @@ async function fetchDonations(query, offset=null, limit=null) {
   return db.Donation.findAll(donationParams);
 }
 
-router.get("", pagination, async function(req, res, next) {
+router.get("", pagination, async function (req, res, next) {
   let offset = req.customParams.offset;
   let limit = req.customParams.limit;
 
   try {
-    const donations = await fetchDonations(req.query, offset, limit);  
+    const donations = await fetchDonations(req.query, offset, limit);
 
     res.json({
       data: donations,
@@ -103,9 +103,9 @@ router.get("", pagination, async function(req, res, next) {
     console.log(err);
     res.status(500).json(err);
   }
-});  
+});
 
-router.get("/download", async function(req, res, next) {
+router.get("/download", async function (req, res, next) {
   res.setHeader("Content-Type", "text/csv");
   res.setHeader(
     "Content-Disposition",
@@ -116,7 +116,7 @@ router.get("/download", async function(req, res, next) {
 
   try {
     const donations = await fetchDonations(req.query)
-    const promises = donations.map(x=>{
+    const promises = donations.map(x => {
       let donation = x.toJSON();
 
       const { id, amount } = donation
@@ -135,7 +135,40 @@ router.get("/download", async function(req, res, next) {
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
-  }  
+  }
+})
+
+router.get("/download", async function (req, res, next) {
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader(
+    "Content-Disposition",
+    'attachment; filename="' + "download-" + Date.now() + '.csv"'
+  );
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Pragma", "no-cache");
+
+  try {
+    const donations = await fetchDonations(req.query)
+    const promises = donations.map(x => {
+      let donation = x.toJSON();
+
+      const { id, amount } = donation
+
+      return {
+        id,
+        donationDate: donation.donationDate.toDateString(),
+        campaign: donation.Campaign.type,
+        source: donation.Source.name,
+        donorName: donation.Donor.name,
+        amount
+      }
+    })
+    const donationsJSON = await Promise.all(promises);
+    stringify(donationsJSON, { header: true }).pipe(res);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 })
 
 module.exports = router;
