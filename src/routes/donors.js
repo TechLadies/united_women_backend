@@ -94,6 +94,18 @@ router.get("", pagination, async function (req, res, next) {
   }
 });
 
+router.get("/count", async function (req, res, next) {
+  try {
+    const donors = await fetchDonors(req.query)
+    res.json({
+      count: donors.length
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 router.get("/download", async function (req, res, next) {
   res.setHeader("Content-Type", "text/csv");
   res.setHeader(
