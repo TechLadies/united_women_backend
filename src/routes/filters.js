@@ -7,9 +7,9 @@ const Sequelize = require("sequelize");
 
 router.get("", async (req, res, next) => {
   try {
-    let campaigns = await db.Campaign.findAll({ attributes: ["type"] });
-    let sources = await db.Source.findAll({ attributes: ["name"] });
-    let donorTypes = await db.DonorType.findAll({ attributes: ["donorType"] });
+    let campaigns = await db.Campaign.findAll({ attributes: ["type", "id"] });
+    let sources = await db.Source.findAll({ attributes: ["name", "id"] });
+    let donorTypes = await db.DonorType.findAll({ attributes: ["donorType", "id"] });
     res.json({
       data: { campaigns, sources, donorTypes }
     });

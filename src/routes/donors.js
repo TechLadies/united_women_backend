@@ -10,7 +10,7 @@ const stringify = require("csv-stringify");
 /* GET donor info with filters
    Sample: /donors?donorTypeId=1&dateStart=2019-11-01T16:00:00.000Z
  */
-async function fetchDonors(query, offset = null, limit = null) {
+function makeDonorParams(query, offset = null, limit = null) {
   const {
     dateStart,
     dateEnd,
@@ -72,8 +72,8 @@ async function fetchDonors(query, offset = null, limit = null) {
     donorParams.offset = offset;
   }
 
-  return db.Donor.findAll(donorParams);
-
+  //return db.Donor.findAll(donorParams);
+  return donorParams;
 }
 
 router.get("", pagination, async function (req, res, next) {
@@ -81,7 +81,8 @@ router.get("", pagination, async function (req, res, next) {
   let limit = req.customParams.limit;
 
   try {
-    const donors = await fetchDonors(req.query, offset, limit);
+    const donorParams = makeDonorParams(req.query, offset, limit);
+    const donors = await db.Donor.findAll(donorParams);
 
     res.json({
       data: donors,
@@ -96,7 +97,9 @@ router.get("", pagination, async function (req, res, next) {
 
 router.get("/count", async function (req, res, next) {
   try {
-    const donors = await fetchDonors(req.query)
+    const donorParams = makeDonorParams(req.query);
+    const donors = await db.Donor.count(donorParams);
+
     res.json({
       count: donors.length
     });
@@ -116,7 +119,9 @@ router.get("/download", async function (req, res, next) {
   res.setHeader("Pragma", "no-cache");
 
   try {
-    const donors = await fetchDonors(req.query)
+    const donorParams = makeDonorParams(req.query);
+    const donors = await db.Donor.findAll(donorParams);
+
     const promises = donors.map(x => {
       let donor = x.toJSON();
 
