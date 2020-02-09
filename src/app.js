@@ -22,19 +22,19 @@ app.use(passport.initialize());
 
 app.post('/login', auth.login);
 
-app.get('/test-required', auth.required, function(req, res){
+app.get('/test-required', auth.required, function (req, res) {
   const user = req.user || {};
   res.json({ id: user.id, username: user.username });
 });
 
-app.get('/test-optional', auth.optional, function(req, res){
+app.get('/test-optional', auth.optional, function (req, res) {
   const user = req.user || {};
   res.json({ id: user.id, username: user.username });
 });
 
 app.use('/donors', donorsRouter)
 app.use('/donations', auth.required, donationsRouter)
-app.use('/filters', auth.required, filtersRouter)
+app.use('/filters', filtersRouter)
 
 app.get('*', function (_, res) {
   res.status(404).json({ message: '404 not found' });
