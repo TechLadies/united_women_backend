@@ -33,7 +33,7 @@ app.get('/test-optional', auth.optional, function (req, res) {
 });
 
 app.use('/donors', donorsRouter)
-app.use('/donations', auth.required, donationsRouter)
+app.use('/donations', donationsRouter)
 app.use('/filters', filtersRouter)
 
 app.get('*', function (_, res) {
