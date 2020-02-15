@@ -10,40 +10,9 @@ const stringify = require("csv-stringify");
 /* GET donor info with filters
    Sample: /donors?donorTypeId=1&dateStart=2019-11-01T16:00:00.000Z
  */
-function makeDonorParams(query, offset = null, limit = null) {
-  const {
-    dateStart,
-    dateEnd,
-    donorTypeId,
-    donorFrequencyId,
-    name
-  } = query;
-
-  let include = [];
-  let where = {};
-
-  if (donorTypeId) {
-    where.donorTypeId = donorTypeId;
-  }
-
-  if (donorFrequencyId) {
-    where.donorFrequencyId = donorFrequencyId;
-  }
-
-  if (dateStart) {
-    where.donationStart = where.donationStart || {}
-    where.donationStart[Op.gt] = new Date(dateStart);
-  }
-
-  if (dateEnd) {
-    where.donationStart = where.donationStart || {}
-    where.donationStart[Op.lt] = new Date(dateEnd);
-  }
-
-  if (name) {
-    let lowercaseName = name.toLowerCase();
-    where.name = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + lowercaseName + '%')
-  }
+function makeDonorParams (query, offset = null, limit = null) {
+  const include = [];
+  const where = makeDonorFilterParams(query);
 
   include.push({
     model: db.Donation,
@@ -51,10 +20,10 @@ function makeDonorParams(query, offset = null, limit = null) {
     attributes: ['amount']
   });
 
-  let donorParams = {
+  const donorParams = {
     include: include,
     where: where,
-    order: [["donationStart", "DESC"]],
+    order: [['donationStart', 'DESC']],
     includeIgnoreAttributes: false,
     attributes: [
       'id',
@@ -67,8 +36,8 @@ function makeDonorParams(query, offset = null, limit = null) {
       [Sequelize.fn('SUM', Sequelize.col('"Donations".amount')), 'total_amount']
     ],
     subQuery: false,
-    group: ["Donor.id"]
-  }
+    group: ['Donor.id']
+  };
 
   if (limit) {
     donorParams.limit = limit;
@@ -78,13 +47,49 @@ function makeDonorParams(query, offset = null, limit = null) {
     donorParams.offset = offset;
   }
 
-  //return db.Donor.findAll(donorParams);
   return donorParams;
 }
 
-router.get("", pagination, async function (req, res, next) {
-  let offset = req.customParams.offset;
-  let limit = req.customParams.limit;
+function makeDonorFilterParams (query) {
+  const {
+    dateStart,
+    dateEnd,
+    donorTypeId,
+    donorFrequencyId,
+    name
+  } = query;
+
+  const where = {};
+
+  if (donorTypeId) {
+    where.donorTypeId = donorTypeId;
+  }
+
+  if (donorFrequencyId) {
+    where.donorFrequencyId = donorFrequencyId;
+  }
+
+  if (dateStart) {
+    where.donationStart = where.donationStart || {};
+    where.donationStart[Op.gt] = new Date(dateStart);
+  }
+
+  if (dateEnd) {
+    where.donationStart = where.donationStart || {};
+    where.donationStart[Op.lt] = new Date(dateEnd);
+  }
+
+  if (name) {
+    const lowercaseName = name.toLowerCase();
+    where.name = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + lowercaseName + '%');
+  }
+
+  return where;
+}
+
+router.get('', pagination, async function (req, res, next) {
+  const offset = req.customParams.offset;
+  const limit = req.customParams.limit;
 
   try {
     const donorParams = makeDonorParams(req.query, offset, limit);
@@ -101,13 +106,15 @@ router.get("", pagination, async function (req, res, next) {
   }
 });
 
-router.get("/count", async function (req, res, next) {
+router.get('/count', async function (req, res, next) {
   try {
-    const donorParams = makeDonorParams(req.query);
-    const donors = await db.Donor.count(donorParams);
+    const donorParams = {
+      where: makeDonorFilterParams(req.query)
+    };
 
+    const count = await db.Donor.count(donorParams);
     res.json({
-      count: donors.length
+      count: count
     });
   } catch (err) {
     console.log(err);
@@ -115,7 +122,7 @@ router.get("/count", async function (req, res, next) {
   }
 });
 
-router.get("/download", async function (req, res, next) {
+router.get('/download', async function (req, res, next) {
   res.setHeader("Content-Type", "text/csv");
   res.setHeader(
     "Content-Disposition",
