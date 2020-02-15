@@ -15,7 +15,8 @@ function makeDonorParams(query, offset = null, limit = null) {
     dateStart,
     dateEnd,
     donorTypeId,
-    donorFrequencyId
+    donorFrequencyId,
+    name
   } = query;
 
   let include = [];
@@ -37,6 +38,11 @@ function makeDonorParams(query, offset = null, limit = null) {
   if (dateEnd) {
     where.donationStart = where.donationStart || {}
     where.donationStart[Op.lt] = new Date(dateEnd);
+  }
+
+  if (name) {
+    let lowercaseName = name.toLowerCase();
+    where.name = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('name')), 'LIKE', '%' + lowercaseName + '%')
   }
 
   include.push({
