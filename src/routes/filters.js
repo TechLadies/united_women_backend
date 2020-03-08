@@ -9,9 +9,11 @@ router.get("", async (req, res, next) => {
   try {
     let campaigns = await db.Campaign.findAll({ attributes: ["type", "id"] });
     let sources = await db.Source.findAll({ attributes: ["name", "id"] });
-    let donorTypes = await db.DonorType.findAll({ attributes: ["donorType", "id"] });
+    let donorTypes = await db.DonorType.findAll({ attributes: ["donorType", "id"] });   
+    let donorFrequency = await db.DonorFrequency.findAll({ attributes: ["donorFrequency", "id"] });
+
     res.json({
-      data: { campaigns, sources, donorTypes }
+      data: { campaigns, sources, donorTypes, donorFrequency }
     });
   } catch (err) {
     console.log(err);
