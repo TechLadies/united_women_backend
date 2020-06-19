@@ -81,4 +81,36 @@ router.get('/:id/donations', pagination, async function (req, res, next) {
 
 })
 
+router.get("/download", async function(req, res, next) {
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader(
+    "Content-Disposition",
+    'attachment; filename="' + "download-" + Date.now() + '.csv"'
+  );
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Pragma", "no-cache");
+
+  try {
+    const donorDetails = await fetchDonorsDetails(req.query)
+    const promises = donorDetails.map(x=>{
+      let donorDetail = x.toJSON();
+
+      console.log(donorDetail)
+      /*return {
+        id,
+        donationDate: donation.donationDate.toDateString(),
+        campaign: donation.Campaign.type,
+        source: donation.Source.name,
+        donorName: donorDetail.name,
+        amount
+      }*/
+    })
+    const donorDetailsJSON = await Promise.all(promises);
+    stringify(donorDetailsJSON, { header: true }).pipe(res);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err);
+  }  
+})
+
 module.exports = router

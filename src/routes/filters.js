@@ -10,8 +10,11 @@ router.get("", async (req, res, next) => {
     let campaigns = await db.Campaign.findAll({ attributes: ["type"] });
     let sources = await db.Source.findAll({ attributes: ["name"] });
     let donorTypes = await db.DonorType.findAll({ attributes: ["donorType"] });
+    let donorFrequency = await db.DonorFrequency.findAll({
+      attributes: ["donorFrequency"],
+    });
     res.json({
-      data: { campaigns, sources, donorTypes }
+      data: { campaigns, sources, donorTypes, donorFrequency },
     });
   } catch (err) {
     console.log(err);

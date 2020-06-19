@@ -11,7 +11,7 @@ const app = express();
 const donorsRouter = require("./routes/donors");
 const donationsRouter = require("./routes/donations");
 const filtersRouter = require("./routes/filters");
-//const uploadRouter = require("./routes/upload-csv");
+const uploadRouter = require("./routes/upload-csv");
 const conflictsRouter = require("./routes/conflicts");
 
 app.use(cors());
@@ -37,7 +37,7 @@ app.get("/test-optional", auth.optional, function(req, res) {
 app.use("/donors", donorsRouter);
 app.use("/donations", auth.required, donationsRouter);
 app.use("/filters", auth.required, filtersRouter);
-//app.use("/upload-csv", uploadRouter);
+app.use("/upload-csv", uploadRouter);
 app.use("/conflicts", conflictsRouter);
 
 app.get("*", function(_, res) {

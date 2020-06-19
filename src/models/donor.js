@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     donationStart: DataTypes.DATE,
     preferredContactMode: DataTypes.STRING,
-    doNotContact: DataTypes.BOOLEAN
+    doNotContact: DataTypes.BOOLEAN,
+    company: DataTypes.STRING,
+    comments: DataTypes.TEXT,
+    total_amount: DataTypes.INTEGER
   }, {});
   Donor.associate = function(models) {
     // associations can be defined here

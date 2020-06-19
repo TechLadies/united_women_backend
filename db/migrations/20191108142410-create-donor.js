@@ -14,7 +14,7 @@ module.exports = {
       },
       identifier: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       salutationId: {
         type: Sequelize.INTEGER,
@@ -63,6 +63,10 @@ module.exports = {
       doNotContact: {
         type: Sequelize.BOOLEAN,
         allowNull: false
+      },
+      total_amount: {
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
